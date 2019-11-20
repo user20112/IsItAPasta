@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Is It a Pasta?</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/pe-icons.css" rel="stylesheet">
+    <link href="css/prettyPhoto.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <script src="js/jquery.js"></script>
+    <link rel="shortcut icon" href="images/ico/favicon.ico">
+</head>
+<!--/head-->
+
+<body>
+    <div id="preloader"></div>
+    <section id="single-page-slider" class="no-margin">
+        <div class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="item active">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="center gap fade-down section-heading">
+                                    <h2 class="main-title">Is It a Pasta?</h2>
+                                    <hr>
+                                    <p>Well lets find out</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/.item-->
+            </div>
+            <!--/.carousel-inner-->
+        </div>
+        <!--/.carousel-->
+    </section>
+    <!--/#main-slider-->
+    <div id="content-wrapper">
+        <form Id="PastaForm" class="form-style-4" style="width:100%; height:100%;text-align: center; " onkeydown="return event.key != 'Enter'">
+            <label for="field1">
+                <p >Pasta Name</p>
+                <input Id="Pasta" type="text" name="field1" required="true" />
+            </label>
+            <label>
+                <span> </span>
+                <input type="button" value="Check If it is a pasta" onclick="PastaSubmit()" />
+            </label>
+        </form>
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div Id="ModalContent">
+
+                </div>
+            </div>
+        </div>
+        <section id="single-quote" class="divider-section">
+            <div class="container">
+                <div class="gap"></div>
+                <div class="row">
+                    <div class='col-md-offset-2 col-md-8 fade-up'>
+                        <div class="carousel slide" data-ride="carousel" id="quote-carousel">
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <blockquote>
+                                        <div class="row">
+                                            <div class="col-sm-3 text-center">
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p id="Qoute">He who has a why to live can bear almost any how.</p>
+                                                <small id="Person">Friedrich Nietzsche</small>
+                                            </div>
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gap"></div>
+            </div>
+        </section>
+    </div>
+    <script src="js/plugins.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.prettyPhoto.js"></script>
+    <script src="js/init.js"></script>
+    <script>
+        jQuery(document).ready(function($) {
+            'use strict';
+            jQuery('body').backstretch([
+                "images/Background.jpg",
+                "images/Background2.jpg",
+                "images/Background3.jpg",
+                "images/Background4.jpg",
+                "images/Background5.jpg",
+                "images/Background6.jpg"
+            ], {
+                duration: 5000,
+                fade: 500
+            });
+
+            $("#mapwrapper").gMap({
+                controls: false,
+                scrollwheel: false,
+                markers: [{
+                    latitude: 40.7566,
+                    longitude: -73.9863,
+                    icon: {
+                        image: "images/marker.png",
+                        iconsize: [44, 44],
+                        iconanchor: [12, 46],
+                        infowindowanchor: [12, 0]
+                    }
+                }],
+                icon: {
+                    image: "images/marker.png",
+                    iconsize: [26, 46],
+                    iconanchor: [12, 46],
+                    infowindowanchor: [12, 0]
+                },
+                latitude: 40.7566,
+                longitude: -73.9863,
+                zoom: 14
+            });
+        });
+        window.onload = function() {
+            GetQoute()
+        };
+        var Qouterequest;
+        var Pastarequest;
+        var Pasta = document.getElementById("PastaForm");
+        Pasta.addEventListener("keydown", function(e) {
+            if (e.keyCode === 13) { //checks whether the pressed key is "Enter"
+                PastaSubmit();
+            }
+        });
+
+        function validate(e) {
+            var text = e.target.value;
+            //validation of the input...
+        }
+
+        function GetQoute() {
+            Qouterequest = new XMLHttpRequest(); // message sent to server 
+            var fd = new FormData();
+            fd.append("request", "GetQoute");
+            Qouterequest.onreadystatechange = QouteServerResponded; // setup callback (Asynchronous)
+            Qouterequest.open("POST", "php/request.php"); // prepare POST message
+            Qouterequest.send(fd);
+
+        } // end OnLoad
+        var RandomPastarequest;
+		function OnWrong()
+		{
+            RandomPastarequest = new XMLHttpRequest(); // message sent to server 
+            var fd = new FormData();
+            fd.append("request", "GetRandomPasta");
+            RandomPastarequest.onreadystatechange = OnWrongResponded; // setup callback (Asynchronous)
+            RandomPastarequest.open("POST", "php/request.php"); // prepare POST message
+            RandomPastarequest.send(fd);
+		
+		}
+		
+		function OnWrongResponded()
+		{ 
+		if (RandomPastarequest.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (RandomPastarequest.status !== 200) {
+                return;
+            } // check for HTTP OK 
+            var json_arr;
+            var json;
+            try {
+                json_arr = JSON.parse(RandomPastarequest.responseText);
+            } catch (ex) {
+                alert(ex.message);
+            }
+			
+            var InnerData = '<div style="background-color: black;"><section id="single-page-slider" class="no-margin"><div class="carousel slide" data-ride="carousel"><div class="carousel-inner"><div class="item active"><div class="container"><div class="row"><div class="col-md-12"><div class="center gap fade-down section-heading"><h2 class="main-title" Id="PastaName">';
+                InnerData = InnerData + document.getElementById("Pasta").value.trim().toLowerCase();
+                InnerData = InnerData + '</h2><hr><p Id="PastaQuickDesc">';
+                InnerData = InnerData + 'Is not a pasta I know! So here is a random pasta!';
+                InnerData = InnerData + '</p></div></div></div></div></div></div></div></section><div id="content-wrapper"><section id="services" class="white"><div class="container"><div class="row"><h3 Id="PastaName2" class="media-heading"><p><img Id="PastaImage" src="images/Pasta/';
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();
+                InnerData = InnerData + '.jpg" alt="Pasta Image" style="width:100px; height:100px;" align="middle">';
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();
+                InnerData = InnerData + '</p></h3><p Id="PastaDesc">';
+                InnerData = InnerData + json_arr[0].Description;
+                InnerData = InnerData + '</p></div></div></section></div></div>';
+            document.getElementById("ModalContent").innerHTML = InnerData;
+            modal.style.display = "block";
+		}
+
+        function QouteServerResponded() { // called when the server responds to message 
+            if (Qouterequest.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (Qouterequest.status !== 200) {
+                return;
+            } // check for HTTP OK 
+            var json_arr;
+            var json;
+            try {
+                json_arr = JSON.parse(Qouterequest.responseText);
+            } catch (ex) {
+                alert(ex.message);
+            }
+            document.getElementById("Qoute").innerHTML = json_arr[0].Qoute;
+            document.getElementById("Person").innerHTML = json_arr[0].Person;
+        }
+
+        function PastaServerResponded() { // called when the server responds to message 
+            if (Pastarequest.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (Pastarequest.status !== 200) {
+                return;
+            } // check for HTTP OK 
+            var json_arr;
+            var json;
+
+            try {
+                json_arr = JSON.parse(Pastarequest.responseText);
+            } catch (ex) {
+                alert(ex.message);
+            }
+            var InnerData = '<div style="background-color: black;"><section id="single-page-slider" class="no-margin"><div class="carousel slide" data-ride="carousel"><div class="carousel-inner"><div class="item active"><div class="container"><div class="row"><div class="col-md-12"><div class="center gap fade-down section-heading"><h2 class="main-title" Id="PastaName">';
+            if (json_arr.length == 0) {
+			OnWrong();
+            } 
+			else 
+			{
+                if (json_arr[0].bool == "true") {
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();;
+                InnerData = InnerData + '</h2><hr><p Id="PastaQuickDesc">';
+                InnerData = InnerData + json_arr[0].ShortDesc;
+                InnerData = InnerData + '</p></div></div></div></div></div></div></div></section><div id="content-wrapper"><section id="services" class="white"><div class="container"><div class="row"><h3 Id="PastaName2" class="media-heading"><p><img Id="PastaImage" src="images/Pasta/';
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();;
+                InnerData = InnerData + '.jpg" alt="Pasta Image" style="width:100px; height:100px;" align="middle">';
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();;
+                InnerData = InnerData + '</p></h3><p Id="PastaDesc">';
+                InnerData = InnerData + json_arr[0].Description;
+                InnerData = InnerData + '</p></div></div></section></div></div>';
+                } else {
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();;
+                InnerData = InnerData + '</h2><hr><p Id="PastaQuickDesc">';
+                InnerData = InnerData + json_arr[0].ShortDesc;
+                InnerData = InnerData + '</p></div></div></div></div></div></div></div></section><div id="content-wrapper"><section id="services" class="white"><div class="container"><div class="row"><h3 Id="PastaName2" class="media-heading"><p><img Id="PastaImage" src="images/Pasta/';
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();;
+                InnerData = InnerData + '.jpg" alt="Pasta Image" style="width:100px; height:100px;" align="middle">';
+                InnerData = InnerData + json_arr[0].Name.toLowerCase();;
+                InnerData = InnerData + '</p></h3><p Id="PastaDesc">';
+                InnerData = InnerData + json_arr[0].Description;
+                InnerData = InnerData + '</p></div></div></section></div></div>';
+                }
+            }
+            document.getElementById("ModalContent").innerHTML = InnerData;
+            modal.style.display = "block";
+        }
+
+        function PastaSubmit() {
+            Pastarequest = new XMLHttpRequest();
+            var fd = new FormData();
+            fd.append("request", "CheckIfPasta");
+            fd.append("Pasta", document.getElementById("Pasta").value.trim().toLowerCase());
+            Pastarequest.onreadystatechange = PastaServerResponded;
+            Pastarequest.open("POST", "php/request.php");
+            Pastarequest.send(fd);
+        }
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        function adjust_textarea(h) {
+            h.style.height = "20px";
+            h.style.height = (h.scrollHeight) + "px";
+        }
+    </script>
+    <style>
+        .form-style-4 {
+            width: 450px;
+            font-size: 16px;
+            background: #495C70;
+            padding: 30px 30px 15px 30px;
+            border: 5px solid #53687E;
+        }
+        
+        .form-style-4 input[type=submit],
+        .form-style-4 input[type=button],
+        .form-style-4 input[type=text],
+        .form-style-4 input[type=email],
+        .form-style-4 textarea,
+        .form-style-4 label {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-size: 16px;
+            color: #fff;
+        }
+        
+        .form-style-4 label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        .form-style-4 label > span {
+            display: inline-block;
+            float: left;
+            width: 150px;
+        }
+        
+        .form-style-4 input[type=text],
+        .form-style-4 input[type=email] {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed #83A4C5;
+            width: 275px;
+            outline: none;
+            padding: 0px 0px 0px 0px;
+            font-style: italic;
+        }
+        
+        .form-style-4 textarea {
+            font-style: italic;
+            padding: 0px 0px 0px 0px;
+            background: transparent;
+            outline: none;
+            border: none;
+            border-bottom: 1px dashed #83A4C5;
+            width: 275px;
+            overflow: hidden;
+            resize: none;
+            height: 20px;
+        }
+        
+        .form-style-4 textarea:focus,
+        .form-style-4 input[type=text]:focus,
+        .form-style-4 input[type=email]:focus,
+        .form-style-4 input[type=email]:focus {
+            border-bottom: 1px dashed #D9FFA9;
+        }
+        
+        .form-style-4 input[type=submit],
+        .form-style-4 input[type=button] {
+            background: #576E86;
+            border: none;
+            padding: 8px 10px 8px 10px;
+            border-radius: 5px;
+            color: #A8BACE;
+        }
+        
+        .form-style-4 input[type=submit]:hover,
+        .form-style-4 input[type=button]:hover {
+            background: #394D61;
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        /* The Modal (background) */
+        
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+        /* Modal Content */
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        /* The Close Button */
+        
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</body>
+
+</html>
